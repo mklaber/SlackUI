@@ -17,7 +17,7 @@ namespace SlackUI {
         /*
          * Handler for the browser on before context menu event.
          */
-        public bool OnBeforeContextMenu(IWebBrowser browser) {
+        public bool OnBeforeContextMenu(IWebBrowser browser, IContextMenuParams parameters) {
             // Disable the context menu
             return false;
         }
