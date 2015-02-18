@@ -1,4 +1,4 @@
-﻿#region Copyright © 2014 Ricardo Amaral
+﻿#region Copyright © 2014-2015 Ricardo Amaral
 
 /*
  * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file.
@@ -131,7 +131,7 @@ namespace SlackUI {
                 }
 
                 // Prevent the window height be less than the minimum allowed
-                if(Program.WrapperForm.MinimumSize.Height > windowSize.Width) {
+                if (Program.WrapperForm.MinimumSize.Height > windowSize.Height) {
                     windowSize = new Size(windowSize.Width, Program.WrapperForm.MinimumSize.Height);
                 }
 

@@ -26,6 +26,7 @@ namespace SlackUI {
         private const string AboutBlankPage = "about:blank";
 
         private const uint SYSMENU_DEVTOOLS_ID = 0x1;
+        private const uint SYSMENU_RELOAD_ID = 0x2;
 
         private readonly ChromiumWebBrowser chromium;
 
@@ -60,6 +61,9 @@ namespace SlackUI {
             // Subscribe to multiple chromium web browser events
             chromium.FrameLoadEnd += chromium_FrameLoadEnd;
             chromium.NavStateChanged += chromium_NavStateChanged;
+
+            // Immediately load the initial page (force handle to be created)
+            chromium.CreateControl();
 
             // Add the chromium web browser to the browser panel
             browserPanel.Controls.Add(chromium);
@@ -128,9 +132,9 @@ namespace SlackUI {
         private void chromium_FrameLoadEnd(object sender, CefSharp.FrameLoadEndEventArgs e) {
             // Was the loaded page the first page load?
             if(!e.Url.Contains(AboutBlankPage)) {
-                // Remove the initial load overlay from the form
+                // Remove the browser load overlay from the form
                 this.InvokeOnUiThreadIfRequired(() => {
-                    browserPanel.Controls.RemoveByKey("initialLoadOverlay");
+                    browserPanel.Controls["browserLoadOverlay"].Visible = false;
                 });
 
                 // Unsubscribe the frame load end event
@@ -173,6 +177,14 @@ namespace SlackUI {
         }
 
         /*
+         * Wrapper form activated event handler.
+         */
+        private void WrapperForm_Activated(object sender, System.EventArgs e) {
+            // Make sure the chromium control is focused
+            chromium.SetFocus(true);
+        }
+
+        /*
          * Wrapper form closing event handler.
          */
         private void WrapperForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -205,6 +217,9 @@ namespace SlackUI {
 
             // Add a separator followed by the DevTools menu item
             NativeMethods.AppendMenu(systemMenu, NativeMethods.MenuFlags.MF_SEPARATOR, UIntPtr.Zero, String.Empty);
+            NativeMethods.AppendMenu(systemMenu, NativeMethods.MenuFlags.MF_STRING, new UIntPtr(SYSMENU_RELOAD_ID),
+                "&Reload Team Site");
+            NativeMethods.AppendMenu(systemMenu, NativeMethods.MenuFlags.MF_SEPARATOR, UIntPtr.Zero, String.Empty);
             NativeMethods.AppendMenu(systemMenu, NativeMethods.MenuFlags.MF_STRING, new UIntPtr(SYSMENU_DEVTOOLS_ID),
                 "&Show DevTools…");
         }
@@ -217,10 +232,21 @@ namespace SlackUI {
 
             // Handles detected Windows messages
             switch(m.Msg) {
-                // Show DevTools if the respective item was selected from the system menu
+                // Invoke the respective actions according to the selected item from the system menu
                 case (int)NativeMethods.WindowsMessages.WM_SYSCOMMAND:
                     if((int)m.WParam == SYSMENU_DEVTOOLS_ID) {
                         chromium.ShowDevTools();
+                    } else if((int)m.WParam == SYSMENU_RELOAD_ID) {
+                        // Add the browser load overlay to the form
+                        this.InvokeOnUiThreadIfRequired(() => {
+                            browserPanel.Controls["browserLoadOverlay"].Visible = true;
+                        });
+
+                        // Subscribe the frame load end event
+                        chromium.FrameLoadEnd += chromium_FrameLoadEnd;
+
+                        // Force reload the current team page
+                        chromium.Reload();
                     }
 
                     break;
