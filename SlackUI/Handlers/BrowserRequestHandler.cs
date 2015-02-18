@@ -1,4 +1,4 @@
-﻿#region Copyright © 2014 Ricardo Amaral
+﻿#region Copyright © 2014-2015 Ricardo Amaral
 
 /*
  * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file.
@@ -6,7 +6,6 @@
 
 #endregion
 
-using System.Diagnostics;
 using System.Linq;
 using CefSharp;
 
@@ -50,12 +49,6 @@ namespace SlackUI {
             // Load the active team address instead of the default sign-in page
             if(request.Url.Equals(SignInUrl)) {
                 browser.Load(Program.ActiveTeamAddress);
-                return true;
-            }
-
-            // Launch the default system browser for any link outside of team domain
-            if(!request.Url.Contains(Program.ActiveTeamAddress)) {
-                Process.Start(request.Url);
                 return true;
             }
 

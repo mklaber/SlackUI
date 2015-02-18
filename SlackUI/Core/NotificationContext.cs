@@ -1,4 +1,4 @@
-﻿#region Copyright © 2014 Ricardo Amaral
+﻿#region Copyright © 2014-2015 Ricardo Amaral
 
 /*
  * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file.
@@ -33,8 +33,8 @@ namespace SlackUI {
 
             // Create menu items for the notification icon context menu
             MenuItem menuItemShow = new MenuItem("Show " + Application.ProductName, menuItemShow_Click);
-            MenuItem menuItemSettings = new MenuItem("Settings...", menuItemSettings_Click);
-            MenuItem menuItemAbout = new MenuItem("About...", menuItemAbout_Click);
+            MenuItem menuItemSettings = new MenuItem("Settings…", menuItemSettings_Click);
+            MenuItem menuItemAbout = new MenuItem("About…", menuItemAbout_Click);
             MenuItem menuItemExit = new MenuItem("Exit", menuItemExit_Click);
 
             // Add icons to the notification icon context menu items

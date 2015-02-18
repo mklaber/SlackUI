@@ -16,7 +16,7 @@ header .header_links {
     display: none !important;
 }
 
-/* Remove Switch Team & Logout menu items. */
+/* Remove Switch Team & Logout menu items from 'Messages' page. */
 
 #menu #add_team {
     display: none !important;
@@ -27,5 +27,15 @@ header .header_links {
 }
 
 #menu_items > .divider:nth-last-child(2) {
+    display: none !important;
+}
+
+/* Remove Teams & Launch button from 'Team Settings' page. */
+
+header .header_nav #team_switcher {
+    display: none !important;
+}
+
+header .header_nav a[href='/messages'] {
     display: none !important;
 }
